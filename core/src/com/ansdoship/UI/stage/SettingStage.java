@@ -19,6 +19,7 @@ public class SettingStage extends BaseStage{
     private static final String TAG = MainGame.class.getSimpleName();
     private Slider musicSlider,soundSlider;
     private FontActor musicFont,soundFont;
+    public static Texture background;
 
     public SettingStage(MainGame mainGame, Viewport viewport){
         super(mainGame, viewport);
@@ -26,7 +27,7 @@ public class SettingStage extends BaseStage{
     }
 
     public void init(){
-        Texture background = new Texture(Gdx.files.internal("sprites/background.png"));
+        background = new Texture(Gdx.files.internal("sprites/background.png"));
         BaseActor back = new BaseActor(new TextureRegion(background));
 
         back.setPosition(180,120);
@@ -67,14 +68,14 @@ public class SettingStage extends BaseStage{
 
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                MenuCache.soundValue = musicSlider.getValue();
+                MenuCache.musicValue = musicSlider.getValue();
                 Gdx.app.log(TAG,"slider改变");
             }
         });
         musicSlider.setValue(100f);
 
-        musicFont = new FontActor("音乐音量:"+musicSlider.getValue(),260,360,0.7f);
-        soundFont = new FontActor("音效音量:"+soundSlider.getValue(),260,420,0.7f);
+        musicFont = new FontActor("音乐音量:"+musicSlider.getValue(),musicSlider.getX(),musicSlider.getY()+musicSlider.getHeight()*1.5f,0.7f);
+        soundFont = new FontActor("音效音量:"+soundSlider.getValue(),soundSlider.getX(),soundSlider.getY()+ soundSlider.getHeight()*1.5f,0.7f);
 
         addActor(soundSlider);
         addActor(musicSlider);

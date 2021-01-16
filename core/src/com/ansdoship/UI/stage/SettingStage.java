@@ -18,7 +18,7 @@ public class SettingStage extends BaseStage{
 
     private static final String TAG = MainGame.class.getSimpleName();
     private Slider musicSlider,soundSlider;
-    private FontActor musicFont,soundFont;
+    private FontActor musicFont,soundFont,savaFont;
     public static Texture background;
 
     public SettingStage(MainGame mainGame, Viewport viewport){
@@ -76,11 +76,13 @@ public class SettingStage extends BaseStage{
 
         musicFont = new FontActor("音乐音量:"+musicSlider.getValue(),musicSlider.getX(),musicSlider.getY()+musicSlider.getHeight()*1.5f,0.7f);
         soundFont = new FontActor("音效音量:"+soundSlider.getValue(),soundSlider.getX(),soundSlider.getY()+ soundSlider.getHeight()*1.5f,0.7f);
+        savaFont = new FontActor("自动存档:",soundSlider.getX(),musicSlider.getY()-musicSlider.getHeight(),0.7f);
 
         addActor(soundSlider);
         addActor(musicSlider);
         addActor(musicFont);
         addActor(soundFont);
+        addActor(savaFont);
     }
 
     @Override

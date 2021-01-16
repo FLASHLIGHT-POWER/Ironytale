@@ -62,7 +62,7 @@ public class SettingButtonGroup extends BaseGroup{
 
         Switch autoSave = new Switch(switchStyle);
         autoSave.setX(sureButton.getX()*2);
-        autoSave.setY(SettingStage.background.getHeight()/4f);
+        autoSave.setY(SettingStage.background.getHeight()/4f+sureButton.getHeight());
 
         addActor(sureButton);
         addActor(notButton);

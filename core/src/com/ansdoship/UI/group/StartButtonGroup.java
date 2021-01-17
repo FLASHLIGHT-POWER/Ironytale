@@ -50,7 +50,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
         startButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                getMainGame().showGameScreen();
             }
         });
 

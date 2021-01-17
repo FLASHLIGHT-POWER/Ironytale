@@ -16,8 +16,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class SettingStage extends BaseStage{
 
+    private static final String TAG = MainGame.class.getSimpleName();
     private Slider musicSlider,soundSlider;
-    private FontActor musicFont,soundFont, saveFont,playerFont;
+    private FontActor musicFont,soundFont,savaFont,playerTeacherFont;
     public static Texture background;
 
     public SettingStage(MainGame mainGame, Viewport viewport){
@@ -26,11 +27,11 @@ public class SettingStage extends BaseStage{
     }
 
     public void init(){
-
         background = new Texture(Gdx.files.internal("sprites/background.png"));
         BaseActor back = new BaseActor(new TextureRegion(background));
 
         back.setPosition(180,120);
+
         addActor(back);
 
         SettingButtonGroup button = new SettingButtonGroup(getMainGame());
@@ -56,10 +57,10 @@ public class SettingStage extends BaseStage{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 MenuCache.soundValue = soundSlider.getValue();
+                Gdx.app.log(TAG,"slider改变");
             }
         });
-        if(MenuCache.isModed) soundSlider.setValue(MenuCache.soundValue);
-        else soundSlider.setValue(100f);
+        soundSlider.setValue(100f);
 
         musicSlider = new Slider(0f,100f,1,false,musicSliderStyle);
         musicSlider.setPosition(260,300);
@@ -68,22 +69,22 @@ public class SettingStage extends BaseStage{
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 MenuCache.musicValue = musicSlider.getValue();
+                Gdx.app.log(TAG,"slider改变");
             }
         });
-        if(MenuCache.isModed) musicSlider.setValue(MenuCache.musicValue);
-        else musicSlider.setValue(100f);
+        musicSlider.setValue(100f);
 
         musicFont = new FontActor("音乐音量:"+musicSlider.getValue(),musicSlider.getX(),musicSlider.getY()+musicSlider.getHeight()*1.5f,0.7f);
         soundFont = new FontActor("音效音量:"+soundSlider.getValue(),soundSlider.getX(),soundSlider.getY()+ soundSlider.getHeight()*1.5f,0.7f);
-        saveFont = new FontActor("自动存档:",soundSlider.getX(),musicSlider.getY()-musicSlider.getHeight(),0.7f);
-        playerFont = new FontActor("新手教程:",soundSlider.getX(),musicSlider.getY()-musicSlider.getHeight()*2.2f,0.7f);
+        savaFont = new FontActor("自动存档:",soundSlider.getX(),musicSlider.getY()-musicSlider.getHeight(),0.7f);
+        playerTeacherFont = new FontActor("新手教程:",soundSlider.getX(),musicSlider.getY()-musicSlider.getHeight()*2.5f,0.7f);
 
         addActor(soundSlider);
         addActor(musicSlider);
         addActor(musicFont);
         addActor(soundFont);
-        addActor(saveFont);
-        addActor(playerFont);
+        addActor(savaFont);
+        addActor(playerTeacherFont);
     }
 
     @Override

@@ -22,6 +22,7 @@ public class StartScreen extends ScreenAdapter {
 
     private final Stage stage;
     private SettingStage settingStage;
+    private ThankingStage thankingStage;
     private final StartStage startStage;
     private float deltaSum;
 
@@ -42,11 +43,13 @@ public class StartScreen extends ScreenAdapter {
         stage.addActor(logoActor);
 
         startStage = new StartStage(mainGame,new StretchViewport(MainGame.WORLD_WIDTH,MainGame.WORLD_HEIGHT));
+        Gdx.input.setInputProcessor(startStage);
 
         settingStage = new SettingStage(mainGame,new ScreenViewport());
         settingStage.setVisible(false);
 
-        Gdx.input.setInputProcessor(startStage);
+        thankingStage = new ThankingStage(mainGame,new StretchViewport(MainGame.WORLD_WIDTH,MainGame.WORLD_HEIGHT));
+        thankingStage.setVisible(false);
     }
 
     @Override
@@ -69,6 +72,11 @@ public class StartScreen extends ScreenAdapter {
                     settingStage.act();
                     settingStage.draw();
                 }
+
+                if(thankingStage.isVisible()){
+                    thankingStage.act();
+                    thankingStage.draw();
+                }
                 return;
             }
         }
@@ -89,15 +97,19 @@ public class StartScreen extends ScreenAdapter {
             logoTexture.dispose();
     }
 
-    public void setSettingStage(boolean showSettingStage){
+    public void setSettingStage(Boolean showSettingStage){
         settingStage.setVisible(showSettingStage);
-        if(showSettingStage) Gdx.input.setInputProcessor(settingStage);
-        else Gdx.input.setInputProcessor(startStage);
+        if(showSettingStage)
+            Gdx.input.setInputProcessor(settingStage);
+        else
+            Gdx.input.setInputProcessor(startStage);
     }
 
-    public void setStartStage(boolean showStartStage){
-        startStage.setVisible(showStartStage);
-        if(showStartStage) Gdx.input.setInputProcessor(startStage);
-        else Gdx.input.setInputProcessor(startStage);
+    public void setThankingStage(Boolean showThankingStage){
+        thankingStage.setVisible(showThankingStage);
+        if(showThankingStage)
+            Gdx.input.setInputProcessor(thankingStage);
+        else
+            Gdx.input.setInputProcessor(startStage);
     }
 }

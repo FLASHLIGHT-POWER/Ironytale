@@ -14,7 +14,7 @@ public class DesktopLauncher {
         config.width = (int) (MainGame.WORLD_WIDTH * scale);         // 窗口宽度
         config.height = (int) (MainGame.WORLD_HEIGHT * scale);        // 窗口高度
 
-        config.resizable = false;   // 窗口设置为大小不可改变
+        config.resizable = false;
 
         new LwjglApplication(new MainGame(), config);
     }

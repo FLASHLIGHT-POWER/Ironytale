@@ -3,10 +3,10 @@ package com.ansdoship;
 import com.ansdoship.UI.screen.GameScreen;
 import com.ansdoship.UI.screen.StartScreen;
 
-import com.ansdoship.UI.screen.ThankingScreen;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 public class MainGame extends Game {
 
@@ -15,7 +15,6 @@ public class MainGame extends Game {
 
     private StartScreen startScreen;
     private GameScreen gameScreen;
-    private ThankingScreen thankingScreen;
     public MainGame() {
     }
 
@@ -26,22 +25,16 @@ public class MainGame extends Game {
 
         startScreen = new StartScreen(this);
         gameScreen = new GameScreen(this);
-        thankingScreen = new ThankingScreen(this);
         setScreen(startScreen);
     }
 
-    public void showStartScreen() {
+    public void showGameScreen() {
         // 设置当前场景为主游戏场景
-        setScreen(startScreen);
-        if(thankingScreen!=null){
-            thankingScreen.dispose();
-            thankingScreen=null;
+        setScreen(gameScreen);
+        if(startScreen!=null){
+            startScreen.dispose();
+            startScreen=null;
         }
-        startScreen.setStartStage(true);
-    }
-
-    public void showThankingScreen() {
-        setScreen(thankingScreen);
     }
 
     public StartScreen getStartScreen(){
@@ -59,10 +52,6 @@ public class MainGame extends Game {
         if (gameScreen != null) {
             gameScreen.dispose();
             gameScreen = null;
-        }
-        if(thankingScreen!=null){
-            thankingScreen.dispose();
-            thankingScreen =null;
         }
     }
 }

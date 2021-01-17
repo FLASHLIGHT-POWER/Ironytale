@@ -62,6 +62,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
             }
         });
+        loadButton.setDisabled(MenuCache.continueGame);
 
         Button settingButton = new Button(settingButtonStyle);
         settingButton.setY(settingButton.getHeight()*2);
@@ -69,7 +70,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
             @Override
             public void clicked(InputEvent event,float x,float y){
                 getMainGame().getStartScreen().setSettingStage(true);
-                Gdx.app.log(TAG,"切换至settingStage");
             }
         });
 
@@ -78,7 +78,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
         thankingButton.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event,float x,float y){
-
+                getMainGame().showThankingScreen();
             }
         });
 

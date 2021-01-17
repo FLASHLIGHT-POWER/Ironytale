@@ -4,7 +4,9 @@ import com.ansdoship.MainGame;
 import com.ansdoship.UI.actor.FontActor;
 import com.ansdoship.UI.actor.Switch;
 import com.ansdoship.UI.stage.SettingStage;
+import com.ansdoship.core.cache.MenuCache;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class SettingButtonGroup extends BaseGroup{
 
-    private static final String TAG = MainGame.class.getSimpleName();
+    public static Preferences setting;
 
     public SettingButtonGroup(MainGame mainGame){
         super(mainGame);
@@ -46,7 +48,13 @@ public class SettingButtonGroup extends BaseGroup{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 getMainGame().getStartScreen().setSettingStage(false);
-                Gdx.app.log(TAG,"切换至startStage");
+                setting = Gdx.app.getPreferences("setting");
+                setting.putFloat("soundValue",MenuCache.soundValue);
+                setting.putFloat("musicValue",MenuCache.musicValue);
+                setting.putBoolean("autoSave",MenuCache.autoSaving);
+                setting.putBoolean("playerTeacher",MenuCache.playerTeach);
+                setting.flush();
+                MenuCache.isModed = true;
             }
         });
 
@@ -56,16 +64,34 @@ public class SettingButtonGroup extends BaseGroup{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 getMainGame().getStartScreen().setSettingStage(false);
-                Gdx.app.log(TAG,"切换至startStage");
             }
         });
 
         Switch autoSave = new Switch(switchStyle);
-        autoSave.setX(sureButton.getX()*2);
+        autoSave.setX(sureButton.getX()*2-autoSave.getWidth()/2);
         autoSave.setY(SettingStage.background.getHeight()/4f+sureButton.getHeight());
+        autoSave.addListener(new ClickListener(){
+           @Override
+           public void clicked(InputEvent event,float x,float y){
+               MenuCache.autoSaving = !MenuCache.autoSaving;
+           }
+        });
+        if(MenuCache.isModed) autoSave.setStatus(MenuCache.autoSaving);
+
+        Switch playerTeacher = new Switch(switchStyle);
+        playerTeacher.setX(autoSave.getX());
+        playerTeacher.setY(autoSave.getY()-autoSave.getHeight());
+        playerTeacher.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event,float x,float y){
+                MenuCache.playerTeach = !MenuCache.playerTeach;
+            }
+        });
+        if(MenuCache.isModed) playerTeacher.setStatus(MenuCache.playerTeach);
 
         addActor(sureButton);
         addActor(notButton);
         addActor(autoSave);
+        addActor(playerTeacher);
     }
 }

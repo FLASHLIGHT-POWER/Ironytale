@@ -12,7 +12,6 @@ public class BaseActor extends Actor {
 
         super();
         this.region = region;
-
         setSize(this.region.getRegionWidth(), this.region.getRegionHeight());
     }
 

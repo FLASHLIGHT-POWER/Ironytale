@@ -11,16 +11,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 public class Switch extends Button {
 
     private static final String TAG = MainGame.class.getSimpleName();
+    private ButtonStyle check,notCheck;
 
     public Switch(ButtonStyle ncheck) {
 
         super(ncheck);
 
-        ButtonStyle check = new ButtonStyle();
+        check = new ButtonStyle();
         check.up = ncheck.up;
         check.down = ncheck.up;
 
-        ButtonStyle notCheck = new ButtonStyle();
+        notCheck = new ButtonStyle();
         notCheck.up = ncheck.down;
         notCheck.down = ncheck.down;
 
@@ -40,8 +41,8 @@ public class Switch extends Button {
         });
     }
 
-    @Override
-    public void draw(Batch batch,float parentAlpha){
-        super.draw(batch,parentAlpha);
+    public void setStatus(boolean boo){
+        if(boo) this.setStyle(check);
+        else this.setStyle(notCheck);
     }
 }

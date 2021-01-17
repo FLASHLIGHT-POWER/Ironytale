@@ -4,6 +4,7 @@ import com.ansdoship.MainGame;
 import com.ansdoship.UI.stage.SettingStage;
 import com.ansdoship.UI.stage.StartStage;
 import com.ansdoship.UI.actor.BaseActor;
+import com.ansdoship.UI.stage.ThankingStage;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,7 +16,6 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 public class StartScreen extends ScreenAdapter {
 
-    // 为了方便与 MainGame 进行交互, 创建 Screen 时将 MainGame 作为参数传进来
     private final MainGame mainGame;
 
     private final Texture logoTexture;
@@ -41,10 +41,11 @@ public class StartScreen extends ScreenAdapter {
 
         stage.addActor(logoActor);
 
+        startStage = new StartStage(mainGame,new StretchViewport(MainGame.WORLD_WIDTH,MainGame.WORLD_HEIGHT));
+
         settingStage = new SettingStage(mainGame,new ScreenViewport());
         settingStage.setVisible(false);
 
-        startStage = new StartStage(mainGame,new StretchViewport(MainGame.WORLD_WIDTH,MainGame.WORLD_HEIGHT));
         Gdx.input.setInputProcessor(startStage);
     }
 
@@ -88,15 +89,15 @@ public class StartScreen extends ScreenAdapter {
             logoTexture.dispose();
     }
 
-    public SettingStage getSettingStage(){
-        return settingStage;
+    public void setSettingStage(boolean showSettingStage){
+        settingStage.setVisible(showSettingStage);
+        if(showSettingStage) Gdx.input.setInputProcessor(settingStage);
+        else Gdx.input.setInputProcessor(startStage);
     }
 
-    public void setSettingStage(Boolean showSettingStage){
-        settingStage.setVisible(showSettingStage);
-        if(showSettingStage)
-            Gdx.input.setInputProcessor(settingStage);
-        else
-            Gdx.input.setInputProcessor(startStage);
+    public void setStartStage(boolean showStartStage){
+        startStage.setVisible(showStartStage);
+        if(showStartStage) Gdx.input.setInputProcessor(startStage);
+        else Gdx.input.setInputProcessor(startStage);
     }
 }

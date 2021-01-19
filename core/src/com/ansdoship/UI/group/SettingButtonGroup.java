@@ -4,6 +4,7 @@ import com.ansdoship.MainGame;
 import com.ansdoship.UI.actor.FontActor;
 import com.ansdoship.UI.actor.Switch;
 import com.ansdoship.UI.stage.SettingStage;
+import com.ansdoship.core.cache.MenuCache;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -46,7 +47,6 @@ public class SettingButtonGroup extends BaseGroup{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 getMainGame().getStartScreen().setSettingStage(false);
-                Gdx.app.log(TAG,"切换至startStage");
             }
         });
 
@@ -56,16 +56,27 @@ public class SettingButtonGroup extends BaseGroup{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 getMainGame().getStartScreen().setSettingStage(false);
-                Gdx.app.log(TAG,"切换至startStage");
             }
         });
 
         Switch autoSave = new Switch(switchStyle);
         autoSave.setX(sureButton.getX()*2);
         autoSave.setY(SettingStage.background.getHeight()/4f+sureButton.getHeight());
+        autoSave.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                MenuCache.autoSaving = !MenuCache.autoSaving;
+            }
+        });
 
         Switch playerTeacher = new Switch(switchStyle);
         playerTeacher.setPosition(autoSave.getX(),autoSave.getY()-autoSave.getHeight());
+        playerTeacher.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y){
+                MenuCache.playerTeach = ! MenuCache.playerTeach;
+            }
+        });
 
         addActor(sureButton);
         addActor(notButton);

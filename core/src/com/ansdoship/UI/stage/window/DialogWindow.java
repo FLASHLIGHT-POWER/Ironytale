@@ -7,7 +7,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -20,9 +19,11 @@ public class DialogWindow extends BaseStage{
 
     private BitmapFont font;
     private static final String TAG = MainGame.class.getSimpleName();
+    private int line;
 
-    public DialogWindow(MainGame mainGame, Viewport viewport,String title,String text) {
+    public DialogWindow(MainGame mainGame, Viewport viewport,String title,String text,int line) {
         super(mainGame, viewport);
+        this.line = line;
         init(title,text);
 
     }
@@ -32,7 +33,7 @@ public class DialogWindow extends BaseStage{
 
         Label.LabelStyle style = new Label.LabelStyle();
         style.font = font;
-        style.fontColor = new Color(0,0.1f,0.5f,1f);
+        style.fontColor = new Color(0,0,0,1f);
 
         Label title = new Label(titleText,style);
         Label content = new Label(text,style);
@@ -40,10 +41,10 @@ public class DialogWindow extends BaseStage{
         BaseActor back = new BaseActor(new TextureRegion(new Texture(Gdx.files.internal("sprites/dialogBack.png"))));
         back.setPosition(MainGame.WORLD_WIDTH/2-back.getWidth()/2,MainGame.WORLD_HEIGHT/2-back.getHeight()/2);
 
-        title.setPosition(back.getX()+30, back.getY() +back.getHeight() - title.getHeight()*2);
+        title.setPosition(back.getX()+20, back.getY() +back.getHeight() - title.getHeight()*1.5f);
         title.setScale(0.3f);
-        content.setPosition( title.getX(), title.getY()-120);
-        content.setScale(0.2f);
+
+        content.setPosition( title.getX(), title.getY()-line*30);
 
         Button.ButtonStyle buttonStyle = new Button.ButtonStyle();
         buttonStyle.up = new TextureRegionDrawable(new TextureRegion(new Texture("button/sure.png")));
@@ -55,12 +56,13 @@ public class DialogWindow extends BaseStage{
             @Override
             public void clicked(InputEvent event, float x, float y){
                 getMainGame().getGameScreen().setDialogWindow(false);
+                getMainGame().showFightScreen(true);
                 Gdx.app.log(TAG,"001");
             }
         });
+        addActor(back);
         addActor(title);
         addActor(content);
-        addActor(back);
         addActor(button);
     }
 }

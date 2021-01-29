@@ -1,9 +1,9 @@
 package com.ansdoship.UI.screen;
 
 import com.ansdoship.MainGame;
-import com.ansdoship.UI.stage.window.DialogWindow;
+import com.ansdoship.UI.stage.FightStage;
+import com.ansdoship.core.control.PlayerController;
 import com.ansdoship.core.world.model.friend.Player;
-import com.ansdoship.core.cache.MenuCache;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
@@ -17,26 +17,27 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.ObjLoader;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 
 import java.util.ArrayList;
 
-public class GameScreen extends ScreenAdapter {
-
+public class FightScreen extends ScreenAdapter {
     private final MainGame mainGame;
+    private FightStage fightStage;
     private PerspectiveCamera perspectiveCamera;
     private boolean startRend = false;
     private Player player;
     private ModelInstance spaceInstance;
     private ModelBatch modelBatch;
     private Environment environmentTest;
-    private CameraInputController cameraController;
-    private AssetManager assets;
-    private final ArrayList<ModelInstance> instances =  new   ArrayList<>();
-    private DialogWindow dialog;
+    private PlayerController playerController;
 
-    public GameScreen(MainGame mainGame) {
+    private AssetManager assets;
+    private final ArrayList<ModelInstance> instances =  new ArrayList<>();
+
+
+    public FightScreen(MainGame mainGame) {
         this.mainGame = mainGame;
         init();
     }
@@ -45,8 +46,10 @@ public class GameScreen extends ScreenAdapter {
         modelBatch = new ModelBatch();
 
         assets = new AssetManager();
+
         assets.load("model/ship.obj", Model.class);
         assets.load("model/spacesphere.obj",Model.class);
+        assets.load("model/weapon.obj",Model.class);
 
         //本来想用assets的
         ModelLoader loader = new ObjLoader();
@@ -55,8 +58,10 @@ public class GameScreen extends ScreenAdapter {
 
         perspectiveCamera = new PerspectiveCamera(  67,(int)MainGame.WORLD_WIDTH, (int)MainGame.WORLD_HEIGHT);
 
-        perspectiveCamera.position.set(50f,50f,5f);
-        perspectiveCamera.lookAt(0,0,0);
+        float[] position = player.getPosition();
+
+        perspectiveCamera.position.set(position[0],position[1]+3,position[2]-3);
+        perspectiveCamera.lookAt(position[0],position[1],position[2]);
         perspectiveCamera.near = 1f;
         perspectiveCamera.far = 300f;
         perspectiveCamera.update();
@@ -65,13 +70,11 @@ public class GameScreen extends ScreenAdapter {
         environmentTest.set(new ColorAttribute(ColorAttribute.AmbientLight,0.4f,0.4f,0.4f,0.1f));
         environmentTest.add(new DirectionalLight().set(0.8f,0.8f,0.8f,-1f,-0.8f,-0.2f));
 
-        cameraController = new CameraInputController(perspectiveCamera);
+        playerController = new PlayerController(player);
 
         startRend = true;
 
-        dialog = new DialogWindow(mainGame,new ScreenViewport(),
-                "???","你好，我是潜意识管理机\n-3.0版本，作为船长的\n驾驶潜意识，你即将进入\n指导教程",5);
-
+        fightStage = new FightStage(player,new ScreenViewport());
     }
 
     @Override
@@ -81,10 +84,12 @@ public class GameScreen extends ScreenAdapter {
 
         if (startRend && assets.update()) loadModel();
 
-        Gdx.input.setInputProcessor(cameraController);
-        cameraController.update();
+        Gdx.input.setInputProcessor(playerController);
+        if(assets.update()) update(delta);
 
         modelBatch.begin(perspectiveCamera);
+
+        perspectiveCamera.update();
         modelBatch.render(instances, environmentTest);
 
         if (spaceInstance != null) {
@@ -92,42 +97,44 @@ public class GameScreen extends ScreenAdapter {
         }
         modelBatch.end();
 
-        if(MenuCache.playerTeach) {
-            Gdx.input.setInputProcessor(dialog);
-            dialog.act();
-            dialog.draw();
-        }
-    }
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void dispose() {
-        player.die();
-    }
-
-    public void setDialogWindow(boolean bool){
-        MenuCache.playerTeach = bool;
-        if(bool){Gdx.input.setInputProcessor(dialog);}else{Gdx.input.setInputProcessor(cameraController);}
+        fightStage.act();
+        fightStage.draw();
     }
 
     private void loadModel(){
         Model model = player.getModel();
         ModelInstance shipInstance = new ModelInstance(model);
-        float[] positon = player.getPosition();
-        shipInstance.transform.setToTranslation(positon[0],positon[1],positon[2]);
-
         Model spaceModel = assets.get("model/spacesphere.obj",Model.class);
         spaceInstance = new ModelInstance(spaceModel);
         instances.add(shipInstance);
+        instances.set(0,shipInstance);
+
+        model = player.getWeaponModel();
+        shipInstance = new ModelInstance(model);
+        instances.add(shipInstance);
+        instances.set(1,shipInstance);
+
         startRend = false;
+    }
+
+    public void update(float delta){
+
+        player.update(delta);
+        float[] position = player.getPosition();
+
+        ModelInstance instance1 = instances.get(0);
+        instance1.transform.setToTranslation(position[0],position[1],position[2]);
+        instances.set(0,instance1);
+
+        instance1 = instances.get(1);
+        instance1.transform.setToTranslation(position[0]-2,position[1]-2,position[2]);
+        instances.set(1,instance1);
+
+        perspectiveCamera.position.set(position[0],position[1]+3,position[2]-3);
+        perspectiveCamera.lookAt(position[0],position[1],position[2]);
+
+        for(ModelInstance instance : instances){
+
+        }
     }
 }

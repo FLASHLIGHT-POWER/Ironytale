@@ -1,5 +1,6 @@
 package com.ansdoship;
 
+import com.ansdoship.UI.screen.FightScreen;
 import com.ansdoship.UI.screen.GameScreen;
 import com.ansdoship.UI.screen.StartScreen;
 import com.badlogic.gdx.Application;
@@ -12,6 +13,7 @@ public class MainGame extends Game {
 
     private StartScreen startScreen;
     private GameScreen gameScreen;
+    private FightScreen fightScreen;
 
     private static final String TAG = MainGame.class.getSimpleName();
     public MainGame() {
@@ -24,6 +26,7 @@ public class MainGame extends Game {
 
         startScreen = new StartScreen(this);
         gameScreen = new GameScreen(this);
+        fightScreen = new FightScreen(this);
         setScreen(startScreen);
 
     }
@@ -44,6 +47,11 @@ public class MainGame extends Game {
 
     public void showGameScreen() {
         setScreen(gameScreen);
+    }
+
+    public void showFightScreen(boolean bool) {
+        if(bool)setScreen(fightScreen);
+        else setScreen(gameScreen);
     }
 
     public GameScreen getGameScreen() {
